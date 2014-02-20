@@ -89,7 +89,7 @@ public class Guess extends Activity implements OnClickListener {
 		ingr =  i.getStringArrayExtra("ingr");
 		cl =   i.getStringArrayExtra("cl");
 		*/
-		getActionBar().setTitle(name);
+		//getActionBar().setTitle(name);
 		
 		
 	}
