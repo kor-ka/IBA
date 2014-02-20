@@ -4,6 +4,7 @@ import android.app.*;
 import android.content.*;
 import android.graphics.Color;
 import android.os.*;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract.CommonDataKinds.Im;
 import it.gmariotti.cardslib.library.internal.*;
 import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
@@ -38,9 +39,11 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ctx = this;
-        shp = getPreferences(MODE_PRIVATE);
+        shp = PreferenceManager.getDefaultSharedPreferences(ctx);
         ed = shp.edit();
         ArrayList<Card> cards = new ArrayList<Card>();
+        
+       
         
         jsonToMap();
         //init Cards
@@ -115,8 +118,9 @@ public class MainActivity extends Activity
     	
     	super.onActivityResult(requestCode, resultCode, data);
     	if(requestCode==1 && resultCode == RESULT_OK){
-    		Boolean iceGuessed = data.getStringExtra("ice")==coctailToSetResult.getIce();
-    		Boolean glassGuessed = data.getStringExtra("glass")==coctailToSetResult.getGlass();
+    		
+    		Boolean iceGuessed = data.getStringExtra("ice").equals( coctailToSetResult.getIce());
+    		Boolean glassGuessed = data.getStringExtra("glass").equals(coctailToSetResult.getGlass());
     		if(iceGuessed&&glassGuessed){
     			Toast.makeText(ctx, "good", Toast.LENGTH_LONG).show();
     		}else{

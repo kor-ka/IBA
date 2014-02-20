@@ -5,6 +5,7 @@ import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
 import java.util.Set;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,7 +50,7 @@ public class Guess extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_guess);
 		
-		shp = getPreferences(MODE_PRIVATE);
+		shp = PreferenceManager.getDefaultSharedPreferences(this);
         ed = shp.edit();
         
       //Get sets
@@ -62,14 +63,14 @@ public class Guess extends Activity implements OnClickListener {
         //SetUp View
         glassEt = (AutoCompleteTextView) findViewById(R.id.guessGlassEt);
         iceEt = (AutoCompleteTextView) findViewById(R.id.guessIceEt);
-        /*
+        
         ArrayAdapter<String> glassAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, glasss.toArray(new String[glasss.size()]));
         ArrayAdapter<String> iceAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ices.toArray(new String[ices.size()]));
         glassEt.setAdapter(glassAdapter);
         iceEt.setAdapter(iceAdapter);
-        */
         
-        Toast.makeText(this, shp.getString("test", "nope"), Toast.LENGTH_LONG).show();
+        
+        
         
         done = (Button) findViewById(R.id.guessDone);
         done.setOnClickListener(this);
@@ -89,7 +90,7 @@ public class Guess extends Activity implements OnClickListener {
 		ingr =  i.getStringArrayExtra("ingr");
 		cl =   i.getStringArrayExtra("cl");
 		*/
-		//getActionBar().setTitle(name);
+		setTitle(name);
 		
 		
 	}
