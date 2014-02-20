@@ -2,11 +2,16 @@ package com.mycompany.myapp;
 
 import android.app.*;
 import android.content.*;
+import android.graphics.Color;
 import android.os.*;
+import android.provider.ContactsContract.CommonDataKinds.Im;
 import it.gmariotti.cardslib.library.internal.*;
+import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
 import it.gmariotti.cardslib.library.view.*;
 import java.util.*;
+
 import org.json.*;
+
 import android.widget.*;
 import android.view.View.*;
 import android.view.*;
@@ -20,19 +25,117 @@ public class MainActivity extends Activity
 	Set<String> glass;
 	Set<String> ice;
 	Set<String> method;
+	ArrayList<String> cocktail;
+	Map<String, Coctail> coctailMap;
+	SharedPreferences shp;
+	SharedPreferences.Editor ed;
+	Coctail coctailToSetResult;
+	Card cardtoSetResul;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
 	{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-		ctx = this;
+        ctx = this;
+        shp = getPreferences(MODE_PRIVATE);
+        ed = shp.edit();
+        ArrayList<Card> cards = new ArrayList<Card>();
+        
+        jsonToMap();
+        //init Cards
+        for(String oneCoctailName:cocktail){
+        	final Coctail oneCoctail = coctailMap.get(oneCoctailName);
+        	
+        	Card card = new Card(ctx);
+        	CardHeader header = new CardHeader(ctx);
+        	CardThumbnail thumb = new CardThumbnail(ctx);
+        	
+        	thumb.setDrawableResource(this.getResources().getIdentifier("ic_launcher", "drawable", this.getPackageName()));
+        	
+        	header.setTitle(oneCoctail.getName());
+        	
+        	String text = "";
+        	String[] ingrs =  oneCoctail.getIngr();
+        	String[] cls =  oneCoctail.getCl();
+        	for(int i=0; i<ingrs.length; i++ ){
+        		 int mCl = 0;
+				 try
+				 {
+					 mCl = Integer.parseInt(cls[i]);
+				 }
+				 catch (NumberFormatException e)
+				 {}
+				String mClStr= "";
+				if (mCl!=0){mClStr=""+mCl+"cl ";}
+        		text = text+"• "+mClStr+ingrs[i]+"\n";
+        	}
+        	text = text+"\n"+oneCoctail.getDescr();
+        	card.setTitle(text);
+        	card.addCardHeader(header);
+        	card.addCardThumbnail(thumb);
+        	
+        	card.setOnClickListener(new OnCardClickListener(){
+
+				@Override
+				public void onClick(Card card, View view) {
+					Intent i = new Intent(ctx, Guess.class);
+					i.putExtra("name", oneCoctail.getName());
+					/*
+					i.putExtra("ice", oneCoctail.getIce());
+					i.putExtra("glass", oneCoctail.getGlass());
+					i.putExtra("method", oneCoctail.getMethod());
+					i.putExtra("cl", oneCoctail.getCl());
+					i.putExtra("ingr", oneCoctail.getIngr());
+					i.putExtra("toping", oneCoctail.getToping());
+					
+					i.putExtra("descr", oneCoctail.getDescr());
+					*/
+					coctailToSetResult = oneCoctail;
+					cardtoSetResul = card;
+					startActivityForResult(i, 1);
+					
+				}
+        		
+        	});
+        	
+        	cards.add(card);
+        }
+		
+        
+		CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(this,cards);
+        CardListView listView = (CardListView) this.findViewById(R.id.fullCardsList);
+        if (listView!=null){
+            listView.setAdapter(mCardArrayAdapter);
+        }	
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	
+    	super.onActivityResult(requestCode, resultCode, data);
+    	if(requestCode==1 && resultCode == RESULT_OK){
+    		Boolean iceGuessed = data.getStringExtra("ice")==coctailToSetResult.getIce();
+    		Boolean glassGuessed = data.getStringExtra("glass")==coctailToSetResult.getGlass();
+    		if(iceGuessed&&glassGuessed){
+    			Toast.makeText(ctx, "good", Toast.LENGTH_LONG).show();
+    		}else{
+    			Toast.makeText(ctx, "loooooser", Toast.LENGTH_LONG).show();
+    		}
+    	}
+    }
+    
+    public void jsonToMap(){
+    	
+    	
 		ingr = new HashSet<String>();
 		toping = new HashSet<String>();
 		glass = new HashSet<String>();
 		ice = new HashSet<String>();
 		method = new HashSet<String>();
-		ArrayList<Card> cards = new ArrayList<Card>();
+		cocktail = new ArrayList<String>();
+		
+		coctailMap = new HashMap<String, Coctail>();
 		
 		baseJsonString = getString(R.string.base);
 		
@@ -42,47 +145,44 @@ public class MainActivity extends Activity
 			 //Toast.makeText(ctx, "langth"+jArray.length(), Toast.LENGTH_SHORT).show();
 		 	for(int i = 0; i < jArray.length(); i++){
 		 		try {
-		 			 JSONObject oneObject = jArray.getJSONObject(i);	
+		 			 JSONObject oneObject = jArray.getJSONObject(i);
+
+					 //Cocktail data
 				     JSONArray ingrs = oneObject.getJSONArray("ingr");
+				     String[] oneingrs = ingrs.toString().replaceAll("\"", "").replaceAll("\\]", "").replaceAll("\\[", "").split(",");
 					 JSONArray cl = oneObject.getJSONArray("cl");
-					 Map<String,String> ingrCl = new HashMap<String,String>();
-					 String text = "";
-					 for(int i2 =0 ; i2 < ingrs.length(); i2++){
-						 ingrCl.put(ingrs.getString(i2), cl.getString(i2));
-						 int mCl = 0;
-						 try
-						 {
-							 mCl = Integer.parseInt(cl.getString(i2));
-						 }
-						 catch (NumberFormatException e)
-						 {}
-						String mClStr= "";
-						if (mCl!=0){mClStr=""+mCl;}
-						 text = text + "â€¢ " + mClStr + " " + ingrs.getString(i2) + "\n";
-					 }
-					 text =text+ "\n" + oneObject.getString("descr") +"\n";
+					 String[] onecls = cl.toString().replaceAll("\"", "").replaceAll("\\]", "").replaceAll("\\[", "").split(",");
+					 
 					 JSONArray topings = oneObject.getJSONArray("toping");
 					 JSONArray methods = oneObject.getJSONArray("method");
+					 String[] onetopings = topings.toString().replaceAll("\"", "").replaceAll("\\]", "").replaceAll("\\[", "").split(",");					 
+					 String[] onemethods = methods.toString().replaceAll("\"", "").replaceAll("\\]", "").replaceAll("\\[", "").split(",");					 
+					 Coctail newcocktail = new Coctail(oneObject.getString("name"),
+							 							oneObject.getString("descr"),
+							 							oneObject.getString("glass"),
+							 							oneObject.getString("ice"),
+							 							oneingrs,
+							 							onecls,
+							 							onetopings,
+							 							onemethods);
+					 coctailMap.put(oneObject.getString("name"), newcocktail);
 					 
-					 Card newcard = new Card (ctx);
-					 CardHeader newheader = new CardHeader(ctx);
-					 CardExpand newcardex = new CardExpand(ctx);
-					 CardThumbnail newthumb = new CardThumbnail(ctx);
 					 
-					 newheader.setTitle(oneObject.getString("name"));
-					 newcardex.setTitle(text);
-					 newthumb.setDrawableResource(R.drawable.ic_launcher);
-					 //newheader.setButtonExpandVisible(true);
-				
-					 newcard.addCardHeader(newheader);
-					 newcard.addCardExpand(newcardex);
-					 newcard.addCardThumbnail(newthumb);
-					
+					//Sets
+					 for(String onetoping:onetopings){toping.add(onetoping);}
+					 for(String onemethod:onemethods){method.add(onemethod);}
+					 glass.add(oneObject.getString("glass"));
+					 ice.add(oneObject.getString("ice"));
+					 cocktail.add(oneObject.getString("name"));
+					 for(String oneingr:oneingrs){ingr.add(oneingr);} 
 					 
-					 //newcard.setViewToClickToExpand(ViewToClickToExpand.builder().setupView(newcard.getCardView()));
-					 newcard.setTitle(text);
-					 
-					 cards.add(newcard);
+					 ed.putStringSet("toping", toping);
+					 ed.putStringSet("method", method);
+					 ed.putStringSet("glass", glass);
+					 ed.putStringSet("ice", ice);
+					 ed.putStringSet("ingr", ingr);
+					 ed.putString("test", "test");
+					 ed.commit();
 					 
 		 		} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -96,10 +196,9 @@ public class MainActivity extends Activity
 			e.printStackTrace();
 			Toast.makeText(ctx, "oops\n" +e.getLocalizedMessage(), 999999999).show();
 		}
-		CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(this,cards);
-        CardListView listView = (CardListView) this.findViewById(R.id.fullCardsList);
-        if (listView!=null){
-            listView.setAdapter(mCardArrayAdapter);
-        }	
+		
+    	
     }
 }
+
+	

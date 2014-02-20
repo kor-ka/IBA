@@ -1,21 +1,56 @@
 package com.mycompany.myapp;
 import java.util.*;
 
-public class Coctail
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Coctail 
 {
 	String name;
 	String descr;
 	String glass;
 	String ice;
-	HashMap<String, String> ingrCl;
+	
 	String[] toping;
-	Coctail(String name, String descr, String glass, String ice, HashMap<String, String> ingrCl, String[] toping){
+	String[] method;
+	String[] ingr;
+	String[] cl;
+	
+	
+	Coctail(String name, String descr, String glass, String ice, String[] ingr, String[] cl, String[] toping, String[] method){
 		this.name = name;
 		this.descr = descr;
 		this.glass=glass;
 		this.ice = ice;
-		this.ingrCl = ingrCl;
+		this.cl = cl;
+		this.ingr = ingr;
 		this.toping = toping;
+		this.method = method;
+	}
+
+	public String[] getIngr() {
+		return ingr;
+	}
+
+	public void setIngr(String[] ingr) {
+		this.ingr = ingr;
+	}
+
+	public String[] getCl() {
+		return cl;
+	}
+
+	public void setCl(String[] cl) {
+		this.cl = cl;
+	}
+
+	
+	public String[] getMethod() {
+		return method;
+	}
+
+	public void setMethod(String[] method) {
+		this.method = method;
 	}
 
 	public void setName(String name)
@@ -58,15 +93,7 @@ public class Coctail
 		return ice;
 	}
 
-	public void setIngrCl(HashMap<String, String> ingrCl)
-	{
-		this.ingrCl = ingrCl;
-	}
-
-	public HashMap<String, String> getIngrCl()
-	{
-		return ingrCl;
-	}
+	
 
 	public void setToping(String[] toping)
 	{
@@ -77,4 +104,6 @@ public class Coctail
 	{
 		return toping;
 	}
+
+	
 }
