@@ -22,6 +22,7 @@ public class MainActivity extends Activity
 	Context ctx;
 	String baseJsonString;
 	Set<String> ingr;
+	Set<String> cls;
 	Set<String> toping;
 	Set<String> glass;
 	Set<String> ice;
@@ -130,8 +131,24 @@ public class MainActivity extends Activity
 			HashSet<String> metSet1 = new HashSet<String>( data.getStringArrayListExtra("method"));
 			HashSet<String> metSet2 = new HashSet<String>(Arrays.asList(coctailToSetResult.getMethod()) );
 			Boolean methodGuessed = metSet1.equals(metSet2);
-					
-    		if(iceGuessed&&glassGuessed&&topingGuessed&&methodGuessed){
+			//Compare ingrs & cls
+			//ingrs check
+			HashSet<String> ingrSet1 = new HashSet<String>( data.getStringArrayListExtra("ingr"));
+			HashSet<String> ingrSet2 = new HashSet<String>(Arrays.asList(coctailToSetResult.getIngr()) );
+			Boolean ingrsGuessed = ingrSet1.equals(ingrSet2);
+			if (ingrsGuessed) {
+				//cl check
+				String[] ingrsOrig = coctailToSetResult.getIngr();
+				String[] clssOrig = coctailToSetResult.getCl();
+				ArrayList<String> ingrsToCheck = data.getStringArrayListExtra("ingr");
+				ArrayList<String> clsToCheck = data.getStringArrayListExtra("cl");
+				for (int i = 0; i < ingrsOrig.length&&ingrsGuessed; i++) {
+					ingrsGuessed=clssOrig[i].equals(clsToCheck.get(ingrsToCheck.indexOf(ingrsOrig[i])));
+
+				}
+			}
+			
+			if(iceGuessed&&glassGuessed&&topingGuessed&&methodGuessed&&ingrsGuessed){
     			Toast.makeText(ctx, "good", Toast.LENGTH_LONG).show();
     		}else{
     			Toast.makeText(ctx, "loooooser", Toast.LENGTH_LONG).show();
@@ -143,6 +160,7 @@ public class MainActivity extends Activity
     	
     	
 		ingr = new HashSet<String>();
+		cls = new HashSet<String>();
 		toping = new HashSet<String>();
 		glass = new HashSet<String>();
 		ice = new HashSet<String>();
@@ -188,7 +206,8 @@ public class MainActivity extends Activity
 					 glass.add(oneObject.getString("glass"));
 					 ice.add(oneObject.getString("ice"));
 					 cocktail.add(oneObject.getString("name"));
-					 for(String oneingr:oneingrs){ingr.add(oneingr);} 
+					 for(String oneingr:oneingrs){ingr.add(oneingr);}
+					 for(String onecl:onecls){cls.add(onecl);}
 					 
 					 ed.putStringSet("toping", toping);
 					 ed.putStringSet("method", method);
@@ -196,6 +215,7 @@ public class MainActivity extends Activity
 					 ed.putStringSet("ice", ice);
 					 ed.putStringSet("ingr", ingr);
 					 ed.putString("test", "test");
+					 ed.putStringSet("cl", cls);
 					 ed.commit();
 					 
 		 		} catch (JSONException e) {

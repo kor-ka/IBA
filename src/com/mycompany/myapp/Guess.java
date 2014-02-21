@@ -39,6 +39,7 @@ public class Guess extends Activity implements OnClickListener {
 	Set<String> glasss;
 	Set<String> ices;
 	Set<String> methods;
+	Set<String> cls;
 	
 	SharedPreferences shp;
 	SharedPreferences.Editor ed;
@@ -47,21 +48,28 @@ public class Guess extends Activity implements OnClickListener {
 	AutoCompleteTextView  iceEt;
 	AutoCompleteTextView  toppingEt;
 	AutoCompleteTextView  methodEt;
+	AutoCompleteTextView  ingrEt;
+	AutoCompleteTextView  clEt;
 	
 	Button done;
 	
 	ImageButton addToping;
 	ImageButton addMethod;
+	ImageButton addIngr;
 	
 	LinearLayout lltopings;
 	LinearLayout llmethod;
+	LinearLayout llingr;
 	
 	//llparams fr new fields 
 	LinearLayout.LayoutParams llpEt = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,1);
 	LinearLayout.LayoutParams llpBtn = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,3);
 	
+	//Lists to add all new strings to intent
 	ArrayList<AutoCompleteTextView> toppingEds;
 	ArrayList<AutoCompleteTextView> methodEds;
+	ArrayList<AutoCompleteTextView> ingrEds;
+	ArrayList<AutoCompleteTextView> clEds;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +84,8 @@ public class Guess extends Activity implements OnClickListener {
         
 		toppingEds = new ArrayList<AutoCompleteTextView>();
 		methodEds = new ArrayList<AutoCompleteTextView>();
+		ingrEds = new ArrayList<AutoCompleteTextView>();
+		clEds = new ArrayList<AutoCompleteTextView>();
 		
 		//Set margins 4 new et & btn
 		int margDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
@@ -89,20 +99,27 @@ public class Guess extends Activity implements OnClickListener {
         glasss=shp.getStringSet("glass", null);
         ices=shp.getStringSet("ice", null);
         ingrs=shp.getStringSet("ingr", null);
+        cls=shp.getStringSet("cl", null);
         
         //SetUp View
         glassEt = (AutoCompleteTextView) findViewById(R.id.guessGlassEt);
         iceEt = (AutoCompleteTextView) findViewById(R.id.guessIceEt);
 		toppingEt =(AutoCompleteTextView) findViewById(R.id.guessToppingEt);
 		methodEt =(AutoCompleteTextView) findViewById(R.id.guessMethodEt);
+		ingrEt =(AutoCompleteTextView) findViewById(R.id.guessIngrEt);
+		clEt =(AutoCompleteTextView) findViewById(R.id.guessClEt);
 		
 		lltopings = (LinearLayout) findViewById(R.id.guessToppingsLay);
 		llmethod = (LinearLayout) findViewById(R.id.guessMethodLay);
+		llingr = (LinearLayout) findViewById(R.id.guessIngrLay);
+		
 		
 		addToping = (ImageButton) findViewById(R.id.guessAddToping);
 		addToping.setOnClickListener(this);
 		addMethod = (ImageButton) findViewById(R.id.guessAddMethod);
 		addMethod.setOnClickListener(this);
+		addIngr = (ImageButton) findViewById(R.id.guessAddIngr);
+		addIngr.setOnClickListener(this);
 		
 		done = (Button) findViewById(R.id.guessDone);
         done.setOnClickListener(this);
@@ -111,10 +128,15 @@ public class Guess extends Activity implements OnClickListener {
         ArrayAdapter<String> iceAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ices.toArray(new String[ices.size()]));
         ArrayAdapter<String> toppingAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, topings.toArray(new String[topings.size()]));
         ArrayAdapter<String> methodAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, methods.toArray(new String[methods.size()]));
+        ArrayAdapter<String> ingrAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingrs.toArray(new String[ingrs.size()]));
+        ArrayAdapter<String> clAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cls.toArray(new String[cls.size()]));
+        
         glassEt.setAdapter(glassAdapter);
         iceEt.setAdapter(iceAdapter);
         toppingEt.setAdapter(toppingAdapter);
         methodEt.setAdapter(methodAdapter);
+        ingrEt.setAdapter(ingrAdapter);
+        clEt.setAdapter(clAdapter);
      
 		//Get coctail data
 		Intent i = getIntent();
@@ -188,6 +210,21 @@ public class Guess extends Activity implements OnClickListener {
 				}
 				methodsToSend.add(methodEt.getText().toString());
 				iResult.putExtra("method",methodsToSend);
+				//put ingrs+cls
+				//ingr
+				ArrayList<String> ingrsToSend = new ArrayList<String>();
+				for(AutoCompleteTextView tv: ingrEds){
+					ingrsToSend.add(tv.getText().toString());
+				}
+				ingrsToSend.add(ingrEt.getText().toString());
+				iResult.putExtra("ingr",ingrsToSend);
+				//cl
+				ArrayList<String> clsToSend = new ArrayList<String>();
+				for(AutoCompleteTextView tv: clEds){
+					clsToSend.add(tv.getText().toString());
+				}
+				clsToSend.add(clEt.getText().toString());
+				iResult.putExtra("cl",clsToSend);
 
 				setResult(RESULT_OK, iResult);
 				finish();
@@ -255,6 +292,45 @@ public class Guess extends Activity implements OnClickListener {
 				newMethodsll.addView(newMethodLlDel, llpBtn);
 				llmethod.addView(newMethodsll);
 				newMethodsEt.requestFocus();
+			break;
+			
+			case R.id.guessAddIngr:
+				//LL + ET
+				final AutoCompleteTextView newIngrEt = new AutoCompleteTextView(this);
+				final AutoCompleteTextView newClEt = new AutoCompleteTextView(this);
+				ArrayAdapter<String> ingrAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingrs.toArray(new String[ingrs.size()]));
+		        ArrayAdapter<String> clAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cls.toArray(new String[cls.size()]));
+		        newIngrEt.setAdapter(ingrAdapter);
+		        newClEt.setAdapter(clAdapter);
+		        
+				LinearLayout newIngrll = new LinearLayout(this);
+				//Add to list
+				ingrEds.add(newIngrEt);
+				clEds.add(newClEt);
+				//Button				
+				Button newIngrDel = new Button(this);
+				newIngrDel.setText("del");
+				newIngrDel.setTextColor(Color.WHITE);
+				newIngrDel.setBackgroundResource(R.color.colordel);
+				newIngrDel.setOnClickListener(new OnClickListener(){
+
+						@Override
+						public void onClick(View v)
+						{
+							LinearLayout l = (LinearLayout) v.getParent();
+							l.setVisibility(View.GONE);
+							ingrEds.remove(newIngrEt);
+							clEds.remove(newClEt);
+						}
+						
+					
+				});
+				//Adding views
+				newIngrll.addView(newIngrEt, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 2.5f));
+				newIngrll.addView(newClEt, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 2.5f));
+				newIngrll.addView(newIngrDel, llpBtn);
+				llingr.addView(newIngrll);
+				newIngrEt.requestFocus();
 			break;
 		}
 	
