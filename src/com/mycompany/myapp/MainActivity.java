@@ -53,8 +53,9 @@ public class MainActivity extends Activity
         	Card card = new Card(ctx);
         	CardHeader header = new CardHeader(ctx);
         	CardThumbnail thumb = new CardThumbnail(ctx);
+        	//Set  thumb pic
         	
-        	thumb.setDrawableResource(this.getResources().getIdentifier("ic_launcher", "drawable", this.getPackageName()));
+        	thumb.setDrawableResource(this.getResources().getIdentifier(oneCoctailName.toLowerCase(), "drawable", this.getPackageName()));
         	
         	header.setTitle(oneCoctail.getName());
         	
@@ -71,7 +72,7 @@ public class MainActivity extends Activity
 				 {}
 				String mClStr= "";
 				if (mCl!=0){mClStr=""+mCl+"cl ";}
-        		text = text+"ï¿½ "+mClStr+ingrs[i]+"\n";
+        		text = text+"• "+mClStr+ingrs[i]+"\n";
         	}
         	text = text+"\n"+oneCoctail.getDescr();
         	card.setTitle(text);
@@ -121,8 +122,16 @@ public class MainActivity extends Activity
     		
     		Boolean iceGuessed = data.getStringExtra("ice").equals( coctailToSetResult.getIce());
     		Boolean glassGuessed = data.getStringExtra("glass").equals(coctailToSetResult.getGlass());
-			Boolean topingGuessed = data.getStringArrayListExtra .equals(coctailToSetResult.getToping());
-    		if(iceGuessed&&glassGuessed){
+			//Compare toppings
+			HashSet<String> topSet1 = new HashSet<String>( data.getStringArrayListExtra("toping"));
+			HashSet<String> topSet2 = new HashSet<String>(Arrays.asList(coctailToSetResult.getToping()) );
+			Boolean topingGuessed = topSet1.equals(topSet2);
+			//Compare methods
+			HashSet<String> metSet1 = new HashSet<String>( data.getStringArrayListExtra("method"));
+			HashSet<String> metSet2 = new HashSet<String>(Arrays.asList(coctailToSetResult.getMethod()) );
+			Boolean methodGuessed = metSet1.equals(metSet2);
+					
+    		if(iceGuessed&&glassGuessed&&topingGuessed&&methodGuessed){
     			Toast.makeText(ctx, "good", Toast.LENGTH_LONG).show();
     		}else{
     			Toast.makeText(ctx, "loooooser", Toast.LENGTH_LONG).show();
@@ -203,6 +212,17 @@ public class MainActivity extends Activity
 		}
 		
     	
+    }
+    
+    public int getCoctailPicByString(String name){
+    	int resId = R.drawable.ic_launcher;
+    	if(name=="AMERICANO"){
+    		resId = R.drawable.americano;
+    	}else if(name=="ALEXANDER"){
+    		resId = R.drawable.alexander;
+    	}
+    	
+    	return resId;
     }
 }
 
