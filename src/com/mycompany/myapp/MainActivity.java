@@ -71,7 +71,7 @@ public class MainActivity extends Activity
 				 {}
 				String mClStr= "";
 				if (mCl!=0){mClStr=""+mCl+"cl ";}
-        		text = text+"• "+mClStr+ingrs[i]+"\n";
+        		text = text+"ï¿½ "+mClStr+ingrs[i]+"\n";
         	}
         	text = text+"\n"+oneCoctail.getDescr();
         	card.setTitle(text);
@@ -121,6 +121,7 @@ public class MainActivity extends Activity
     		
     		Boolean iceGuessed = data.getStringExtra("ice").equals( coctailToSetResult.getIce());
     		Boolean glassGuessed = data.getStringExtra("glass").equals(coctailToSetResult.getGlass());
+			Boolean topingGuessed = data.getStringArrayListExtra .equals(coctailToSetResult.getToping());
     		if(iceGuessed&&glassGuessed){
     			Toast.makeText(ctx, "good", Toast.LENGTH_LONG).show();
     		}else{
