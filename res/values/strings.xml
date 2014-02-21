@@ -3,7 +3,105 @@
 
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">IBA</string>
-    <string name="base">{\"base\":[{\"name\":\"AMERICANO\",\"type\":\"Before Dinner Cocktail\",\"descr\":\"Mix the ingredients directly in an old-fashioned glass filled with ice-cubes, add a splash of soda water and garnish with half orange slice.\",\"glass\":\"old-fashioned glass\",\"ice\":\"cubes\",\"toping\":[\"half orange slice\"],\"method\":[\"mix\"],\"ingr\":[\"Campari\",\"Red Vermouth\",\"Soda water\"],\"cl\":[3,3,\"splash\"]},{\"name\":\"ALEXANDER\",\"type\":\"After Dinner Cocktail\",\"descr\":\"Shake and strain into a chilled cocktail glass. Sprinkle with fresh ground nutmeg\",\"glass\":\"cocktail glass\",\"ice\":\"\",\"toping\":[\"ground nutmeg\"],\"method\":[\"strain\",\"shake\"],\"ingr\":[\"Cognac\",\"Creme de Cacao (brown)\",\"Fresh cream\"],\"cl\":[3,3,3]}]}</string>
+    <string name="base">{
+  \"base\": [
+    {
+      \"name\": \"AMERICANO\",
+      \"type\": \"Before Dinner Cocktail\",
+      \"descr\": \"Mix the ingredients directly in an old-fashioned glass filled with ice-cubes, add a splash of soda water and garnish with half orange slice.\",
+      \"glass\": \"old-fashioned glass\",
+      \"ice\": \"cubes\",
+      \"toping\": [
+        \"half orange slice\"
+      ],
+      \"method\": [
+        \"mix\"
+      ],
+      \"ingr\": [
+        \"Campari\",
+        \"Red Vermouth\",
+        \"Soda water\"
+      ],
+      \"cl\": [
+        3,
+        3,
+        \"splash\"
+      ]
+    },
+    {
+      \"name\": \"ALEXANDER\",
+      \"type\": \"After Dinner Cocktail\",
+      \"descr\": \"Shake and strain into a chilled cocktail glass.\nSprinkle with fresh ground nutmeg\",
+      \"glass\": \"cocktail glass\",
+      \"ice\": \"\",
+      \"toping\": [
+        \"ground nutmeg\"
+      ],
+      \"method\": [
+        \"strain\",
+        \"shake\"
+      ],
+      \"ingr\": [
+        \"Cognac\",
+        \"Creme de Cacao (brown)\",
+        \"Fresh cream\"
+      ],
+      \"cl\": [
+        3,
+        3,
+        3
+      ]
+    },
+    {
+      \"name\": \"ANGEL FACE\",
+      \"type\": \"All Day Cocktail\",
+      \"descr\": \"Pour all ingredients into a shaker with ice.\nShake. Strain into a cocktail glass.\",
+      \"glass\": \"cocktail glass\",
+      \"ice\": \"\",
+      \"toping\": [
+        \"\"
+      ],
+      \"method\": [
+        \"strain\",
+        \"shake\"
+      ],
+      \"ingr\": [
+        \"Gin\",
+        \"Apricot brandy\",
+        \"Calvados\"
+      ],
+      \"cl\": [
+        3,
+        3,
+        3
+      ]
+    },
+    {
+      \"name\": \"AVIATION\",
+      \"type\": \"All Day Cocktail\",
+      \"descr\": \"Shake and strain into a chilled cocktail glass.\",
+      \"glass\": \"cocktail glass\",
+      \"ice\": \"\",
+      \"toping\": [
+        \"\"
+      ],
+      \"method\": [
+        \"strain\",
+        \"shake\"
+      ],
+      \"ingr\": [
+        \"Gin\",
+        \"Maraschino\",
+        \"Fresh lemon juice\"
+      ],
+      \"cl\": [
+        4.5,
+        1.5,
+        1.5
+      ]
+    }
+  ]
+}</string>
     <string name="title_activity_guess">Guess</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>

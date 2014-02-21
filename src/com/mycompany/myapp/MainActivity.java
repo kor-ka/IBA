@@ -56,7 +56,7 @@ public class MainActivity extends Activity
         	CardThumbnail thumb = new CardThumbnail(ctx);
         	//Set  thumb pic
         	
-        	thumb.setDrawableResource(this.getResources().getIdentifier(oneCoctailName.toLowerCase(), "drawable", this.getPackageName()));
+        	thumb.setDrawableResource(this.getResources().getIdentifier(oneCoctailName.replace(" ", "_").toLowerCase(), "drawable", this.getPackageName()));
         	
         	header.setTitle(oneCoctail.getName());
         	
@@ -64,10 +64,10 @@ public class MainActivity extends Activity
         	String[] ingrs =  oneCoctail.getIngr();
         	String[] cls =  oneCoctail.getCl();
         	for(int i=0; i<ingrs.length; i++ ){
-        		 int mCl = 0;
+        		 Double mCl = 0.0;
 				 try
 				 {
-					 mCl = Integer.parseInt(cls[i]);
+					 mCl = Double.parseDouble(cls[i]);
 				 }
 				 catch (NumberFormatException e)
 				 {}
